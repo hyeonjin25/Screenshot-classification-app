@@ -8,14 +8,8 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
-  View,
 } from 'react-native';
-
 
 
 function App() {
@@ -27,11 +21,10 @@ function App() {
 
   const RNFS = require('react-native-fs');
 
-  RNFS.readDir(RNFS.ExternalStorageDirectoryPath+'/DCIM/Screenshots' ) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+  RNFS.readDir(RNFS.ExternalStorageDirectoryPath+'/DCIM/Screenshots' ) 
   .then((result) => {
     console.log('GOT RESULT', result);
 
-    // stat all file
     return result.map((res)=>(
       [RNFS.stat(res.path), res.path]
     )) 
