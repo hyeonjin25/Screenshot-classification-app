@@ -17,7 +17,7 @@ export function StackNavigator() {
       animationEnabled={false}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="TagScreen" component={TagsScreen} />
+      <Stack.Screen name="Tag" component={TagsScreen} />
       <Stack.Screen name="TagImage" component={TagImagesScreen} />
       <Stack.Screen name="ImageDetail" component={ImageDetailScreen} />
     </Stack.Navigator>
