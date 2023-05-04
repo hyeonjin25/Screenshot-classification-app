@@ -10,6 +10,9 @@ import axios from 'axios';
 import React from 'react';
 import {BASE_URL} from './src/config/api';
 import {StackNavigator} from './src/navigator/StackNavigator';
+import {
+  RecoilRoot,
+} from 'recoil';
 
 function App() {
   const RNFS = require('react-native-fs');
@@ -63,9 +66,11 @@ function App() {
   };
 
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <RecoilRoot>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </RecoilRoot>
   );
 }
 
