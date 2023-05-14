@@ -2,14 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import {FlatList, Image} from 'react-native';
 import {windowWidth} from '../../utils/GlobalStyles';
+import {useNavigation} from '@react-navigation/native';
 
 export const ImageList = ({data}) => {
-  console.log(data);
+  const navigation = useNavigation();
   return (
     <>
       <FlatList
         data={data}
-        renderItem={List}
+        navigation={navigation}
+        renderItem={item => <List uri={item.item} navigation={navigation} />}
         numColumns={3}
         showsVerticalScrollIndicator={false}
       />
@@ -17,13 +19,16 @@ export const ImageList = ({data}) => {
   );
 };
 
-const List = item => {
-  console.log('아템', item);
+const List = ({uri, navigation}) => {
   return (
-    item && (
-      <ImageBox>
+    uri && (
+      <ImageBox
+        onPress={() => {
+          console.log('p')
+          navigation.navigate('ImageDetail',{uri:uri});
+        }}>
         <Image
-          source={{uri: item.item}}
+          source={{uri: uri}}
           style={{
             width: windowWidth * 0.3 - 10,
             height: windowWidth * 0.3 - 10,
@@ -35,6 +40,6 @@ const List = item => {
   );
 };
 
-const ImageBox = styled.View`
+const ImageBox = styled.TouchableOpacity`
   padding: 5px;
 `;
