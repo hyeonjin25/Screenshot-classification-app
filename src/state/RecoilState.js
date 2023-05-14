@@ -13,3 +13,15 @@ export const FcmTokenState = atom({
   default: null,
   // effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 });
+
+// 즐겨찾는 태그
+export const FavoriteTagState = atom({
+  key: 'FavoriteTagState',
+  default: [],
+});
+
+// 전체 태그
+export const AllTagState = atom({
+  key: 'AllTagState',
+  default: [],
+});

@@ -6,6 +6,7 @@ import SearchScreen from '../SearchScreen';
 import TagImagesScreen from '../TagImagesScreen';
 import TagsScreen from '../TagsScreen';
 import ImageDetailScreen from '../ImageDetailScreen';
+import {AppColor} from '../utils/GlobalStyles';
 
 const Stack = createStackNavigator();
 
@@ -13,7 +14,10 @@ export function StackNavigator() {
   return (
     <Stack.Navigator
       initialRouteName={'Home'}
-      screenOptions={{headerShown: false}}
+      screenOptions={{
+        headerShown: false,
+        cardStyle: {backgroundColor: AppColor.white},
+      }}
       animationEnabled={false}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
