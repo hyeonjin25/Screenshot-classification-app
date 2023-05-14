@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "768282740179",
+    "project_id": "imagetager",
+    "storage_bucket": "imagetager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768282740179:android:bce56ab47b717c92f35b26",
+        "android_client_info": {
+          "package_name": "com.capston"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768282740179-qmi4r5u2rcs19d6fe3686rq1h1pmr9op.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRaHIdEizVeKne8UaAdjDLpSsNbsxSiZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768282740179-qmi4r5u2rcs19d6fe3686rq1h1pmr9op.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,10 @@ import {AppRegistry} from 'react-native';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {name as appName} from './app.json';
 import App from './App';
+import {RecoilRoot} from 'recoil';
+import ReactNativeRecoilPersist, {
+  ReactNativeRecoilPersistGate,
+} from "react-native-recoil-persist";
 
 const theme = {
   ...DefaultTheme,
@@ -19,9 +23,13 @@ const theme = {
 
 export default function Main() {
   return (
-    <PaperProvider theme={theme}>
-      <App />
-    </PaperProvider>
+    <RecoilRoot>
+      <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+        <PaperProvider theme={theme}>
+          <App />
+        </PaperProvider>
+      </ReactNativeRecoilPersistGate>
+    </RecoilRoot>
   );
 }
 

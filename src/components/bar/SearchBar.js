@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {Searchbar} from 'react-native-paper';
-import {QueryState} from '../../state/QueryState';
+import {QueryState} from '../../state/RecoilState';
 import {useRecoilState} from 'recoil';
 
 export const SearchBar = () => {
