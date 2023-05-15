@@ -25,3 +25,9 @@ export const AllTagState = atom({
   key: 'AllTagState',
   default: [],
 });
+
+// 랜더링 이미지
+export const ImageListState = atom({
+  key: 'ImageListState',
+  default: [],
+});
