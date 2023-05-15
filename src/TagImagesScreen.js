@@ -1,8 +1,9 @@
 import React from 'react';
-import {Tag} from './components/List/Tag';
-import {Container} from './HomeScreen';
+import {Tag} from './components/List/TagList';
+import {Container, TitleBox} from './HomeScreen';
 import BackBar from './components/bar/BackBar';
 import {ImageList} from './components/List/ImageList';
+import {Text} from '@rneui/themed/dist';
 
 const imageURI = [
   'http://placeimg.com/640/480/animals',
@@ -25,11 +26,14 @@ const imageURI = [
 ];
 
 const TagImagesScreen = props => {
+  console.log(props)
   return (
     <>
       <BackBar />
       <Container>
-        <Tag title={props.route.params} />
+        <TitleBox>
+          <Text h4># {props.route.params}</Text>
+        </TitleBox>
         <ImageList data={imageURI} />
       </Container>
     </>
