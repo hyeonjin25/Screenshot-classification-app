@@ -1,25 +1,29 @@
 import React from 'react';
-import {Button, Text} from 'react-native-paper';
-import {Tag} from './components/List/Tag';
-import {Container, TitleBox} from './HomeScreen';
+import {TagList} from './components/List/TagList';
+import {Container, TagBox, TitleBox} from './HomeScreen';
 import BackBar from './components/bar/BackBar';
+import {Button, Icon, Text} from '@rneui/themed';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const TagsScreen = props => {
+  console.log(props.route.params);
   return (
     <>
       <BackBar />
       <Container>
-        <TitleBox>
-          <Text variant="headlineSmall" style={{fontWeight: 'bold'}}>
-            {props.route.params == 'favorite' ? '즐겨 찾는 태그' : '전체 태그'}
-          </Text>
-          <Button icon="dots-horizontal" textColor="black" />
-        </TitleBox>
-        <Tag title={'인스타그램'} />
-        <Tag title={'인스타그램'} />
-        <Tag title={'인스타그램'} />
-        <Tag title={'인스타그램'} />
-        <Tag title={'인스타그램'} />
+        <TagBox>
+          <TitleBox>
+            <Text h4>
+              {props.route.params.category == 'favorite'
+                ? '즐겨 찾는 태그'
+                : '전체 태그'}
+            </Text>
+            <TouchableOpacity style={{marginLeft: 10}} onPress={() => {}}>
+              <Icon type="entypo" name="dots-three-vertical" color="white" />
+            </TouchableOpacity>
+          </TitleBox>
+          <TagList tags={props.route.params.tags} />
+        </TagBox>
       </Container>
     </>
   );

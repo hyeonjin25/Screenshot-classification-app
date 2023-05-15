@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import styled from 'styled-components';
-import {Tag} from './components/List/Tag';
+import {TagList} from './components/List/TagList';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {SearchBar} from './components/bar/SearchBar';
 import {useRecoilState, useSetRecoilState} from 'recoil';
@@ -16,9 +16,11 @@ const HomeScreen = () => {
     useRecoilState(FavoriteTagState);
   const [allTagState, setAllTagState] = useRecoilState(AllTagState);
 
-  useFocusEffect(() => {
-    setQueryState('');
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setQueryState('');
+    }, []),
+  );
 
   useEffect(() => {
     getTags();
@@ -29,7 +31,8 @@ const HomeScreen = () => {
     customAxios
       .get(`/book-mark-tags`)
       .then(res => {
-        setAllTagState(res.data.data);
+        setFavoriteTagState(res.data.data);
+        console.log('즐겨찾는 태그 : ', res);
       })
       .catch(err => {
         console.log(err);
@@ -39,7 +42,8 @@ const HomeScreen = () => {
     customAxios
       .get(`/tags`)
       .then(res => {
-        setFavoriteTagState(res.data.data);
+        setAllTagState(res.data.data);
+        console.log('모든 태그 : ', res);
       })
       .catch(err => {
         console.log(err);
@@ -58,17 +62,13 @@ const HomeScreen = () => {
             <Text
               variant="titleMedium"
               onPress={() => {
-                navigation.navigate('Tag', 'favorite');
+                navigation.navigate('Tag', {category:'favorite',tags: favoriteTagState});
               }}
               style={{color: AppColor.gray}}>
               전체보기
             </Text>
           </TitleBox>
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
+          <TagList tags={favoriteTagState} />
 
           <Divider style={{marginTop: '5%', marginBottom: '5%'}} />
 
@@ -77,17 +77,13 @@ const HomeScreen = () => {
             <Text
               variant="titleMedium"
               onPress={() => {
-                navigation.navigate('Tag', 'whole');
+                navigation.navigate('Tag', {category:'all',tags: allTagState});
               }}
               style={{color: AppColor.gray}}>
               전체보기
             </Text>
           </TitleBox>
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
-          <Tag title={'인스타그램'} />
+          <TagList tags={allTagState} />
         </TagBox>
       </Container>
     </>
