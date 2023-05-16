@@ -1,29 +1,33 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
-import {Text} from '@rneui/themed';
+import {Divider, Icon, ListItem, Text} from '@rneui/themed';
 import useSearch from '../../hook/useSearch';
+import {Button} from '@rneui/base';
+import customAxios from '../../api/axios';
+import {FlatList} from 'react-native-gesture-handler';
 
-export const TagList = ({tags}) => {
-  const navigation = useNavigation();
+export const TagList = ({tags, isDelete}) => {
   const searchTag = useSearch();
   console.log(tags);
 
   if (tags?.length !== 0) {
     return (
       <>
-        {tags.map(tag => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('TagImage', tag);
-              searchTag(tag);
-            }}>
-            <TagBox>
-              <Text style={{fontSize: 20}}># {tag}</Text>
-            </TagBox>
-          </TouchableOpacity>
-        ))}
+        <FlatList
+          data={tags}
+          renderItem={item => {
+            console.log(item);
+            return (
+              <List
+                data={item.item}
+                isDelete={isDelete}
+                index={item.index}
+                searchTag={searchTag}
+              />
+            );
+          }}
+        />
       </>
     );
   } else {
@@ -37,5 +41,49 @@ export const TagList = ({tags}) => {
 
 const TagBox = styled.View`
   flex-direction: row;
-  padding: 5px;
+  align-items: center;
+  padding: 2%;
 `;
+
+const List = ({data, isDelete, index, searchTag}) => {
+  const navigation = useNavigation();
+
+  const onDelete = data => {
+    customAxios
+      .delete(`/book-mark-tags/${data}`)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  return (
+    <>
+      {index != 0 && <Divider />}
+      <ListItem
+        key={index}
+        onPress={() => {
+          navigation.navigate('TagImage', data);
+          searchTag(data);
+        }}>
+        <ListItem.Content>
+          <ListItem.Title>
+            <Text style={{fontSize: 20}}># {data}</Text>
+          </ListItem.Title>
+        </ListItem.Content>
+        {isDelete ? (
+          <Button
+            title="삭제"
+            onPress={() => onDelete(data)}
+            icon={{name: 'delete', color: 'white'}}
+            buttonStyle={{backgroundColor: 'red'}}
+          />
+        ) : (
+          <ListItem.Chevron />
+        )}
+      </ListItem>
+    </>
+  );
+};

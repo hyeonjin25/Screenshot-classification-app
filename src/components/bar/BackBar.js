@@ -5,7 +5,7 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AppColor} from '../../utils/GlobalStyles';
 
-const BackBar = () => {
+const BackBar = ({rightOnPress, rightIcon, title}) => {
   const navigation = useNavigation();
   return (
     <>
@@ -20,7 +20,13 @@ const BackBar = () => {
             <Icon type="ionicon" name="chevron-back" />
           </TouchableOpacity>
         }
+        rightComponent={
+          <TouchableOpacity style={{marginRight: 10}} onPress={rightOnPress}>
+            {rightIcon}
+          </TouchableOpacity>
+        }
         backgroundColor={AppColor.white}
+        centerComponent={{text: title, style: {fontSize: 20}}}
       />
     </>
   );
