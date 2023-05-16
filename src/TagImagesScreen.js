@@ -1,5 +1,4 @@
 import React from 'react';
-import {Tag} from './components/List/TagList';
 import {Container, TitleBox} from './HomeScreen';
 import BackBar from './components/bar/BackBar';
 import {ImageList} from './components/List/ImageList';
