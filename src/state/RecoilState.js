@@ -1,33 +1,44 @@
-// import { ReactNativeRecoilPersist } from 'react-native-recoil-persist/build/Persist';
-import {atom} from 'recoil';
+import {atom, selector} from 'recoil';
+import ReactNativeRecoilPersist from 'react-native-recoil-persist';
 
 // 검색어
 export const QueryState = atom({
-  key: 'queryState',
+  key: 'query',
   default: '',
-});
-
-// FCM 토큰
-export const FcmTokenState = atom({
-  key: 'FcmTokenState',
-  default: null,
-  // effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 });
 
 // 즐겨찾는 태그
 export const FavoriteTagState = atom({
-  key: 'FavoriteTagState',
+  key: 'favoriteTag',
   default: [],
+  effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 });
 
 // 전체 태그
 export const AllTagState = atom({
-  key: 'AllTagState',
+  key: 'allTag=',
   default: [],
+  effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 });
 
 // 랜더링 이미지
 export const ImageListState = atom({
-  key: 'ImageListState',
+  key: 'imageList',
   default: [],
+});
+
+// 랜더링 태그
+export const TagListState = atom({
+  key: 'tagList',
+  default: [],
+});
+
+// 즐겨찾기 되지 않은 태그들
+export const NoFavoriteTagsState = selector({
+  key: 'noFavoriteTags',
+  get: ({get}) => {
+    const allTag = get(AllTagState);
+    const favoriteTag = get(FavoriteTagState);
+    return allTag.filter(tag => !favoriteTag.includes(tag));
+  },
 });
