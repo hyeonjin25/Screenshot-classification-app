@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {Vibration} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {Icon, Text} from '@rneui/themed';
 import {Input} from '@rneui/themed';
 import {Button, Overlay} from '@rneui/base';
@@ -16,7 +15,6 @@ import {useRecoilState} from 'recoil';
 import { TagListState } from './state/RecoilState';
 
 const ImageDetailScreen = props => {
-  const navigation = useNavigation();
   console.log('dd', props.route.params);
   const [visible, setVisible] = useState(false);
   const [newTag, setNewTag] = useState('');

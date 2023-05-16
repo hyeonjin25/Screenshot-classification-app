@@ -12,14 +12,11 @@ import {BASE_URL} from './src/config/api';
 import {StackNavigator} from './src/navigator/StackNavigator';
 import messaging from '@react-native-firebase/messaging';
 import {RecoilRoot, useRecoilState} from 'recoil';
-import {FcmTokenState} from './src/state/RecoilState';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App() {
   const RNFS = require('react-native-fs');
-  const [fcmTokenState, setFcmTokenState] = useRecoilState(FcmTokenState);
 
-  
   // fcm token 가져와서 storage에 저장
   const getFCMToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -41,6 +38,7 @@ function App() {
     getFCMToken();
   }, []);
 
+  // 캡쳐사진 읽기
   RNFS.readDir(RNFS.ExternalStorageDirectoryPath + '/DCIM/Screenshots')
     .then(result => {
       // console.log('GOT RESULT', result);
@@ -64,6 +62,7 @@ function App() {
       console.log(err.message, err.code);
     });
 
+  // 캡쳐사진 서버에 전송
   const sendImages = images => {
     const formData = new FormData();
     console.log('콘솔', images);
@@ -90,11 +89,11 @@ function App() {
   };
 
   return (
-    <RecoilRoot>
-      <NavigationContainer>
-        <StackNavigator />
-      </NavigationContainer>
-    </RecoilRoot>
+      <RecoilRoot>
+        <NavigationContainer>
+          <StackNavigator />
+        </NavigationContainer>
+      </RecoilRoot>
   );
 }
 
