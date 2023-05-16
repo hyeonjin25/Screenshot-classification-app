@@ -1,9 +1,9 @@
+import React, {useState, useEffect} from 'react';
+import {Vibration} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Icon, Text} from '@rneui/themed';
 import {Input} from '@rneui/themed';
 import {Button, Overlay} from '@rneui/base';
-import React, {useState} from 'react';
-import {Vibration} from 'react-native';
 import {
   ScrollView,
   TouchableWithoutFeedback,
@@ -11,13 +11,16 @@ import {
 import styled from 'styled-components';
 import {AppColor, windowWidth} from './utils/GlobalStyles';
 import BackBar from './components/bar/BackBar';
-import {ImageListState} from './state/RecoilState';
+import customAxios from './api/axios';
+import {useRecoilState} from 'recoil';
+import { TagListState } from './state/RecoilState';
 
 const ImageDetailScreen = props => {
   const navigation = useNavigation();
   console.log('dd', props.route.params);
   const [visible, setVisible] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const [tagListState, setTagListState] = useRecoilState(TagListState); // 태그 리스트
   console.log(newTag);
 
   const tags = [
@@ -38,16 +41,27 @@ const ImageDetailScreen = props => {
     '나비',
   ];
 
+  useEffect(() => {
+    customAxios
+      .get(`/images/${props.route.params.imageId}`)
+      .then(res => {
+        setTagListState(res?.data?.data?.tags);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <BackBar />
 
       <ImageBox>
-        <Image source={{uri: props.route.params.uri}} />
+        <Image source={{uri: props.route.params.imageUrl}} />
       </ImageBox>
 
       <TagBox>
-        <Tags tags={tags} />
+        <Tags tags={tagListState} />
         <AddButton onPress={() => setVisible(true)}>
           <Icon type="entypo" name="plus" />
           <Text style={{marginLeft: 5}}>태그 추가</Text>
@@ -78,6 +92,16 @@ const ImageDetailScreen = props => {
           }}
           onPress={() => {
             setVisible(false);
+
+            // 사진에 태그 추가
+            customAxios
+              .post(`/image/${props.route.params.imageId}/tag/${newTag}`)
+              .then(res => {
+                console.log(res);
+              })
+              .catch(err => {
+                console.log(err);
+              });
           }}
         />
       </Overlay>
