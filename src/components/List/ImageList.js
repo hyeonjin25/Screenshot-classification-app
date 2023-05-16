@@ -43,7 +43,10 @@ const List = ({data, navigation}) => {
   return (
     <ImageBox
       onPress={() => {
-        navigation.navigate('ImageDetail', {uri: data.imageUrl});
+        navigation.navigate('ImageDetail', {
+          imageId: data.imageId,
+          imageUrl: data.imageUrl,
+        });
       }}
       key={data.imageId}>
       <Image
