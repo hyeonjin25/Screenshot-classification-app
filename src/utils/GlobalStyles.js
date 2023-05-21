@@ -16,7 +16,7 @@ export const AppSize = {
 //
 export const AppColor = {
   primary: '#DBE2EF',
-  secondary: '#3F72AF',
+  secondary: '#379CFF',
   white: '#F9F7F7',
   dark: '#112D4E',
   gray: 'gray',
@@ -24,7 +24,26 @@ export const AppColor = {
 
 export const theme = {
   colors: {
-    primary: '#DBE2EF',
-    secondary: '#3F72AF',
+    primary: AppColor.primary,
+    secondary: AppColor.secondary,
+  },
+  components: {
+    Text: {
+      style: {
+        color: 'black',
+      },
+      h1Style: {
+        fontSize: 24,
+      },
+      h2Style: {
+        fontSize: 22,
+      },
+      h3Style: {
+        fontSize: 19,
+      },
+      h4Style: {
+        fontSize: 16,
+      },
+    },
   },
 };

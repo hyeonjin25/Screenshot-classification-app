@@ -1,10 +1,9 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {SearchBar as Searchbar, ThemeProvider} from '@rneui/themed';
-import {ImageListState, QueryState} from '../../state/RecoilState';
+import {SearchBar as Searchbar} from '@rneui/themed';
+import {QueryState} from '../../state/RecoilState';
 import {useRecoilState} from 'recoil';
-import {AppColor, theme} from '../../utils/GlobalStyles';
-import customAxios from '../../api/axios';
+import {AppColor} from '../../utils/GlobalStyles';
 import useSearch from '../../hook/useSearch';
 
 export const SearchBar = () => {

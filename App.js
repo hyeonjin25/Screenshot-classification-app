@@ -11,8 +11,9 @@ import React from 'react';
 import {BASE_URL} from './src/config/api';
 import {StackNavigator} from './src/navigator/StackNavigator';
 import messaging from '@react-native-firebase/messaging';
-import {RecoilRoot, useRecoilState} from 'recoil';
+import {RecoilRoot} from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import customAxios from './src/api/axios';
 
 function App() {
   const RNFS = require('react-native-fs');
@@ -82,7 +83,7 @@ function App() {
       },
     };
 
-    axios
+    customAxios
       .post(`${BASE_URL}/images`, formData, config)
       .then(data => console.log(data))
       .catch(err => console.log('/images 에러 : ', err));

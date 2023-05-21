@@ -1,70 +1,105 @@
 import React, {useState, useEffect} from 'react';
-import {Vibration} from 'react-native';
-import {Icon, Text} from '@rneui/themed';
+import {Header, Icon, Text} from '@rneui/themed';
 import {Input} from '@rneui/themed';
-import {Button, Overlay} from '@rneui/base';
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {Button, Chip, Overlay} from '@rneui/base';
+import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import {AppColor, windowWidth} from './utils/GlobalStyles';
-import BackBar from './components/bar/BackBar';
+import {BackBar} from './components/bar/BasicHeaderBar';
 import customAxios from './api/axios';
 import {useRecoilState} from 'recoil';
-import { TagListState } from './state/RecoilState';
+import {TagListState} from './state/RecoilState';
 
 const ImageDetailScreen = props => {
   console.log('dd', props.route.params);
+  const [showHeader, setShowHeader] = useState(false); //사진 터치하면 헤더 보이도록
   const [visible, setVisible] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   const [newTag, setNewTag] = useState('');
   const [tagListState, setTagListState] = useRecoilState(TagListState); // 태그 리스트
-  console.log(newTag);
-
-  const tags = [
-    '강아지',
-    '고양이',
-    '나비',
-    '강아지이이',
-    '고양이',
-    '나비',
-    '강아지',
-    '고양이',
-    '나비',
-    '강아지',
-    '고양이',
-    '나비',
-    '강아지',
-    '고양이',
-    '나비',
-  ];
+  console.log(tagListState);
 
   useEffect(() => {
+    getTags();
+  }, []);
+
+  const getTags = () => {
     customAxios
       .get(`/images/${props.route.params.imageId}`)
       .then(res => {
+        console.log('태그들', res?.data?.data);
         setTagListState(res?.data?.data?.tags);
       })
       .catch(err => {
         console.log(err);
       });
-  }, []);
+  };
+
+  const addTag = () => {
+    setVisible(false);
+
+    // 사진에 태그 추가
+    customAxios
+      .post(`/image/${props.route.params.imageId}/tag/${newTag}`)
+      .then(res => {
+        console.log(res);
+        // 태그 동기화
+        getTags();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const deleteTag = tag => {
+    setVisible(false);
+
+    // 사진에 태그 추가
+    customAxios
+      .delete(`/image/tag/${tag}`)
+      .then(res => {
+        console.log(res);
+        // 태그 동기화
+        getTags();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
-      <BackBar />
+      {showHeader && (
+        <HeaderBar>
+          <Header
+            leftComponent={<BackBar color={'black'} />}
+            backgroundColor="rgba(0,0,0,0.4)"
+          />
+        </HeaderBar>
+      )}
 
-      <ImageBox>
+      <ImageBox
+        onPress={() => {
+          setShowHeader(!showHeader);
+        }}>
         <Image source={{uri: props.route.params.imageUrl}} />
       </ImageBox>
 
-      <TagBox>
-        <Tags tags={tagListState} />
-        <AddButton onPress={() => setVisible(true)}>
-          <Icon type="entypo" name="plus" />
-          <Text style={{marginLeft: 5}}>태그 추가</Text>
-        </AddButton>
-      </TagBox>
+      {showHeader && (
+        <TagBox>
+          <Tags tags={tagListState} deleteTag={deleteTag} isDelete={isDelete} />
+          <ButtonBox>
+            <AddButton onPress={() => setIsDelete(!isDelete)}>
+              <Icon type="entypo" name="minus" color="white" />
+              <Text style={{color: 'white'}}>태그 삭제</Text>
+            </AddButton>
+            <AddButton onPress={() => setVisible(true)}>
+              <Icon type="entypo" name="plus" color="white" />
+              <Text style={{color: 'white'}}>태그 추가</Text>
+            </AddButton>
+          </ButtonBox>
+        </TagBox>
+      )}
 
       {/* 태그 추가 모달 */}
       <Overlay
@@ -88,64 +123,75 @@ const ImageDetailScreen = props => {
             backgroundColor: AppColor.secondary,
             borderRadius: 20,
           }}
-          onPress={() => {
-            setVisible(false);
-
-            // 사진에 태그 추가
-            customAxios
-              .post(`/image/${props.route.params.imageId}/tag/${newTag}`)
-              .then(res => {
-                console.log(res);
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          }}
+          onPress={() => addTag()}
         />
       </Overlay>
     </>
   );
 };
 
-const ImageBox = styled.View`
+const HeaderBar = styled.View`
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+`;
+
+const ImageBox = styled.TouchableWithoutFeedback`
   flex: 1;
 `;
 
 const Image = styled.Image`
-  max-width: 100%;
-  max-height: 100%;
   margin: auto;
-  aspect-ratio: ${props => props.aspectRatio || 1};
+  width: 100%;
+  height: 100%;
+  /* aspect-ratio: ${props => props.aspectRatio || 0.8}; */
   resize-mode: contain;
 `;
 
 const TagBox = styled.View`
-  height: 20%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
   padding: 5%;
   padding-bottom: 2%;
+  background: rgba(0, 0, 0, 0.5);
+`;
+
+const ButtonBox = styled.View`
+  flex-direction: row;
+  margin-top: 5%;
+  margin-left: auto;
 `;
 
 const AddButton = styled.TouchableOpacity`
   margin-top: auto;
-  margin-left: auto;
+  margin-left: 10px;
   flex-direction: row;
   align-items: center;
 `;
 
-const Tags = ({tags}) => {
+const Tags = ({tags, deleteTag, isDelete}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <TagsGroup>
         {tags.map((tag, index) => (
-          <TouchableWithoutFeedback
-            delayLongPress={300}
-            onLongPress={() => {
-              Vibration.vibrate(100);
-            }}>
-            <Tag key={index}>
-              <Text style={{fontSize: 15}}># {tag}</Text>
-            </Tag>
-          </TouchableWithoutFeedback>
+          <Chip
+            index={index}
+            title={`# ${tag}`}
+            icon={
+              isDelete && {
+                name: 'x',
+                type: 'feather',
+                size: 15,
+                color: 'white',
+              }
+            }
+            onPress={() => deleteTag(tag)}
+            iconRight
+            containerStyle={{margin: 5}}
+            buttonStyle={{backgroundColor: AppColor.secondary}}
+          />
         ))}
       </TagsGroup>
     </ScrollView>
@@ -157,13 +203,6 @@ const TagsGroup = styled.View`
   flex-direction: row;
   width: 100%;
   justify-content: center;
-`;
-
-const Tag = styled.View`
-  background-color: ${AppColor.primary};
-  border-radius: 17px;
-  padding: 8px;
-  margin: 5px;
 `;
 
 export default ImageDetailScreen;
