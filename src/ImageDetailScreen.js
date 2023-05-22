@@ -72,7 +72,7 @@ const ImageDetailScreen = props => {
       {showHeader && (
         <HeaderBar>
           <Header
-            leftComponent={<BackBar color={'black'} />}
+            leftComponent={<BackBar color={'white'} />}
             backgroundColor="rgba(0,0,0,0.4)"
           />
         </HeaderBar>
@@ -90,12 +90,24 @@ const ImageDetailScreen = props => {
           <Tags tags={tagListState} deleteTag={deleteTag} isDelete={isDelete} />
           <ButtonBox>
             <AddButton onPress={() => setIsDelete(!isDelete)}>
-              <Icon type="entypo" name="minus" color="white" />
-              <Text style={{color: 'white'}}>태그 삭제</Text>
+              <Icon
+                type="entypo"
+                name="minus"
+                color={isDelete ? 'black' : 'white'}
+              />
+              <Text
+                style={{
+                  color: isDelete ? 'black' : 'white',
+                  fontWeight: 'bold',
+                }}>
+                태그 삭제
+              </Text>
             </AddButton>
             <AddButton onPress={() => setVisible(true)}>
               <Icon type="entypo" name="plus" color="white" />
-              <Text style={{color: 'white'}}>태그 추가</Text>
+              <Text style={{color: 'white', fontWeight: 'bold'}}>
+                태그 추가
+              </Text>
             </AddButton>
           </ButtonBox>
         </TagBox>
@@ -178,7 +190,7 @@ const Tags = ({tags, deleteTag, isDelete}) => {
         {tags.map((tag, index) => (
           <Chip
             index={index}
-            title={`# ${tag}`}
+            title={`# ${tag.second}`}
             icon={
               isDelete && {
                 name: 'x',
@@ -187,7 +199,7 @@ const Tags = ({tags, deleteTag, isDelete}) => {
                 color: 'white',
               }
             }
-            onPress={() => deleteTag(tag)}
+            onPress={() => deleteTag(tag.first)}
             iconRight
             containerStyle={{margin: 5}}
             buttonStyle={{backgroundColor: AppColor.secondary}}
