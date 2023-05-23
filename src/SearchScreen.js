@@ -4,6 +4,7 @@ import {SearchBar} from './components/bar/SearchBar';
 import {ImageList} from './components/List/ImageList';
 import {Container} from './HomeScreen';
 import styled from 'styled-components';
+import {AppColor} from './utils/GlobalStyles';
 
 const SearchScreen = () => {
   return (
@@ -11,11 +12,11 @@ const SearchScreen = () => {
       <Header>
         <BackBar />
         <SearchBox>
-          <SearchBar />
+          <SearchBar backgroundColor={AppColor.white} />
         </SearchBox>
       </Header>
       <Container>
-        <ImageList/>
+        <ImageList />
       </Container>
     </>
   );

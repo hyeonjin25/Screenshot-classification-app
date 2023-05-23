@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native';
-import { Divider } from '@rneui/base';
 import {Header} from '@rneui/themed';
 import {Icon} from '@rneui/themed/dist';
 import React from 'react';
@@ -19,8 +18,9 @@ const BasicHeaderBar = ({rightOnPress, rightIcon, title, backgroundColor}) => {
         backgroundColor={backgroundColor ? backgroundColor : AppColor.primary}
         centerComponent={{
           text: title,
-          style: {color: 'black', fontSize: 22, fontWeight: 600},
+          style: {color: 'black', fontSize: 20, fontWeight: 600},
         }}
+        containerStyle={{paddingBottom: 15}}
       />
     </>
   );

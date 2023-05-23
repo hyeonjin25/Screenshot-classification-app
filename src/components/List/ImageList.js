@@ -13,13 +13,16 @@ export const ImageList = () => {
 
   if (imageListState.length !== 0) {
     return (
-      <FlatList
-        data={imageListState}
-        navigation={navigation}
-        renderItem={item => <List data={item.item} navigation={navigation} />}
-        numColumns={3}
-        showsVerticalScrollIndicator={false}
-      />
+      <Container>
+        <FlatList
+          data={imageListState}
+          navigation={navigation}
+          renderItem={item => <List data={item.item} navigation={navigation} />}
+          numColumns={3}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 100}}
+        />
+      </Container>
     );
   } else {
     return (
@@ -29,6 +32,12 @@ export const ImageList = () => {
     );
   }
 };
+
+const Container = styled.View`
+  width: ${windowWidth * 0.96};
+  margin: 0 auto;
+  margin-top: 10px;
+`;
 
 const TextBox = styled.View`
   align-items: center;
@@ -52,8 +61,8 @@ const List = ({data, navigation}) => {
       <Image
         source={{uri: data.imageUrl}}
         style={{
-          width: windowWidth * 0.3 - 10,
-          height: windowWidth * 0.3 - 10,
+          width: windowWidth * 0.32 - 10,
+          height: windowWidth * 0.32 - 10,
         }}
         resizeMode="cover"
       />

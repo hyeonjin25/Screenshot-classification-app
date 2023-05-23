@@ -14,7 +14,7 @@ export const TagList = ({tags, isDelete}) => {
 
   if (tags?.length !== 0) {
     return (
-      <>
+      <Container>
         <FlatList
           data={tags}
           renderItem={item => {
@@ -28,7 +28,7 @@ export const TagList = ({tags, isDelete}) => {
             );
           }}
         />
-      </>
+      </Container>
     );
   }
 
@@ -38,6 +38,10 @@ export const TagList = ({tags, isDelete}) => {
     </TagBox>
   );
 };
+
+const Container = styled.View`
+  margin: 0 3%;
+`;
 
 const TagBox = styled.View`
   flex-direction: row;

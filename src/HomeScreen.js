@@ -77,61 +77,58 @@ const HomeScreen = () => {
   };
 
   return (
-    <>
-      <Container>
-        <SearchBox>
-          <SearchBar />
-        </SearchBox>
-        <TagBox showsVerticalScrollIndicator={false}>
-          <TagsContainer>
-            <TitleBox>
-              <Row>
-                <Text h1>즐겨 찾는 태그</Text>
-                {/* 태그 추가 아이콘 */}
-                <IconBox
-                  onPress={() => {
-                    setVisible(true);
-                    setSelectAddTag('');
-                  }}>
-                  <Icon type="entypo" name="plus" />
-                </IconBox>
-              </Row>
+    <GrayBox>
+      <SearchBar />
 
-              <Text
-                variant="titleMedium"
+      <TagBox showsVerticalScrollIndicator={false}>
+        <WhiteBox>
+          <TitleBox>
+            <Row>
+              <Text h2>즐겨 찾는 태그</Text>
+              {/* 태그 추가 아이콘 */}
+              <IconBox
                 onPress={() => {
-                  navigation.navigate('Tag', {
-                    category: 'favorite',
-                    tags: favoriteTagState,
-                  });
-                }}
-                style={{color: AppColor.gray}}>
-                전체보기
-              </Text>
-            </TitleBox>
-            <TagList tags={topFavoriteTagState} />
-          </TagsContainer>
-          <Empty />
+                  setVisible(true);
+                  setSelectAddTag('');
+                }}>
+                <Icon type="entypo" name="plus" color={AppColor.secondary} />
+              </IconBox>
+            </Row>
+            <Text
+              variant="titleMedium"
+              onPress={() => {
+                navigation.navigate('Tag', {
+                  category: 'favorite',
+                  tags: favoriteTagState,
+                });
+              }}
+              style={{color: AppColor.secondary}}>
+              전체보기
+            </Text>
+          </TitleBox>
+          <TagList tags={topFavoriteTagState} />
+        </WhiteBox>
 
-          <TagsContainer>
-            <TitleBox>
-              <Text h1>전체 태그</Text>
-              <Text
-                variant="titleMedium"
-                onPress={() => {
-                  navigation.navigate('Tag', {
-                    category: 'all',
-                    tags: allTagState,
-                  });
-                }}
-                style={{color: AppColor.gray}}>
-                전체보기
-              </Text>
-            </TitleBox>
-            <TagList tags={topAllTagState} />
-          </TagsContainer>
-        </TagBox>
-      </Container>
+        <DivideBox height={30} />
+
+        <WhiteBox>
+          <TitleBox>
+            <Text h2>전체 태그</Text>
+            <Text
+              variant="titleMedium"
+              onPress={() => {
+                navigation.navigate('Tag', {
+                  category: 'all',
+                  tags: allTagState,
+                });
+              }}
+              style={{color: AppColor.secondary}}>
+              전체보기
+            </Text>
+          </TitleBox>
+          <TagList tags={topAllTagState} />
+        </WhiteBox>
+      </TagBox>
 
       {/* 즐겨찾는 태그 추가 모달 */}
       <Overlay
@@ -169,9 +166,22 @@ const HomeScreen = () => {
           />
         </ButtonBox>
       </Overlay>
-    </>
+    </GrayBox>
   );
 };
+
+const GrayBox = styled.View`
+  flex: 1;
+  background-color: ${AppColor.body};
+`;
+
+const WhiteBox = styled.View`
+  background-color: ${AppColor.white};
+  padding: 3% 0;
+  margin: 0 20px;
+  border-radius: 15px;
+  elevation: 2;
+`;
 
 export const Container = styled.View`
   flex: 1;
@@ -184,23 +194,19 @@ export const SearchBox = styled.View`
   margin-bottom: 5%;
 `;
 
-const TagsContainer = styled.View`
-  width: 100%;
-  border: solid 4px ${AppColor.primary};
-  padding: 15px;
-  border-radius: 10px;
+const DivideBox = styled.View`
+  width: ${windowWidth}
+  height: ${props => props.height};
 `;
 
 export const TitleBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin: 10px 5%;
 `;
 
 export const TagBox = styled.ScrollView`
-  margin-left: 3%;
-  margin-right: 3%;
   margin-bottom: 10px;
 `;
 
@@ -210,11 +216,7 @@ export const Row = styled.View`
 `;
 
 const IconBox = styled.TouchableOpacity`
-  padding: 10px;
-`;
-
-const Empty = styled.View`
-  height: 30px;
+  padding: 5px;
 `;
 
 const ButtonBox = styled.View`

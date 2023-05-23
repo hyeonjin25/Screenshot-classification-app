@@ -15,11 +15,12 @@ export const AppSize = {
 // color
 //
 export const AppColor = {
-  primary: '#DBE2EF',
+  primary: '#F0F0F0',
   secondary: '#379CFF',
   white: '#F9F7F7',
   dark: '#112D4E',
   gray: 'gray',
+  body: '#F0F0F0',
 };
 
 export const theme = {
