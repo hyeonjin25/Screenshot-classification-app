@@ -48,7 +48,7 @@ export const TopFavoriteTagsState = selector({
   key: 'topFavoriteTags',
   get: ({get}) => {
     const favoriteTag = get(FavoriteTagState);
-    return favoriteTag.slice(0, 4);
+    return favoriteTag.slice(0, 5);
   },
 });
 
@@ -57,6 +57,6 @@ export const TopAllTagsState = selector({
   key: 'topAllTags',
   get: ({get}) => {
     const allTag = get(AllTagState);
-    return allTag.slice(0, 4);
+    return allTag.slice(0, 5);
   },
 });
