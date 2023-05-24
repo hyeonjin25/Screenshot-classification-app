@@ -18,10 +18,12 @@ import customAxios from './api/axios';
 import {Button} from '@rneui/base';
 import {FlatList} from 'react-native-gesture-handler';
 import useFavorite from './hook/useFavorite';
+import useAllTags from './hook/useAllTags';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const favoriteTag = useFavorite();
+  const allTag = useAllTags();
 
   const [visible, setVisible] = useState(false);
   const [selectAddTag, setSelectAddTag] = useState('');
@@ -49,14 +51,7 @@ const HomeScreen = () => {
     favoriteTag();
 
     // 모든 태그 조회
-    customAxios
-      .get(`/tags`)
-      .then(res => {
-        setAllTagState(res.data.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    allTag();
   };
 
   const addTags = () => {
@@ -83,7 +78,7 @@ const HomeScreen = () => {
       </Container>
 
       <TagBox showsVerticalScrollIndicator={false}>
-        <DivideBox height={10} />
+        <DivideBox height={15} />
         <WhiteBox>
           <TitleBox>
             <Row>
