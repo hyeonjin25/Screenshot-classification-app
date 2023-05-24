@@ -12,12 +12,10 @@ const SearchScreen = () => {
       <Header>
         <BackBar />
         <SearchBox>
-          <SearchBar backgroundColor={AppColor.white} />
+          <SearchBar containerColor={AppColor.white} />
         </SearchBox>
       </Header>
-      <Container>
-        <ImageList />
-      </Container>
+      <ImageList />
     </>
   );
 };

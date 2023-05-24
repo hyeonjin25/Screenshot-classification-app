@@ -13,7 +13,7 @@ import {
   TopFavoriteTagsState,
 } from './state/RecoilState';
 import {AppColor, windowHeight, windowWidth} from './utils/GlobalStyles';
-import {Icon, Overlay, Text} from '@rneui/themed';
+import {Divider, Icon, Overlay, Text} from '@rneui/themed';
 import customAxios from './api/axios';
 import {Button} from '@rneui/base';
 import {FlatList} from 'react-native-gesture-handler';
@@ -78,9 +78,12 @@ const HomeScreen = () => {
 
   return (
     <GrayBox>
-      <SearchBar />
+      <Container>
+        <SearchBar />
+      </Container>
 
       <TagBox showsVerticalScrollIndicator={false}>
+        <DivideBox height={10} />
         <WhiteBox>
           <TitleBox>
             <Row>
@@ -128,6 +131,8 @@ const HomeScreen = () => {
           </TitleBox>
           <TagList tags={topAllTagState} />
         </WhiteBox>
+
+        <DivideBox height={20} />
       </TagBox>
 
       {/* 즐겨찾는 태그 추가 모달 */}
@@ -140,7 +145,8 @@ const HomeScreen = () => {
           maxHeight: windowHeight * 0.4,
           padding: 30,
           justifyContent: 'space-around',
-          borderRadius: 10,
+          borderRadius: 15,
+          elevation: 3,
         }}>
         <FlatList
           data={noFavoriteTagState}
@@ -178,16 +184,15 @@ const GrayBox = styled.View`
 const WhiteBox = styled.View`
   background-color: ${AppColor.white};
   padding: 3% 0;
-  margin: 0 20px;
+  margin: 0 5%;
   border-radius: 15px;
   elevation: 2;
 `;
 
 export const Container = styled.View`
-  flex: 1;
-  padding-top: 2%;
-  padding-left: 4%;
-  padding-right: 4%;
+  /* flex: 1; */
+  /* padding-top: 2%; */
+  padding: 0 3.3%;
 `;
 
 export const SearchBox = styled.View`
@@ -225,16 +230,19 @@ const ButtonBox = styled.View`
 
 const ChoiceTags = ({data, setSelectAddTag, selectAddTag}) => {
   return (
-    <TextList
-      key={data.index}
-      onPress={() => {
-        selectAddTag == data.item
-          ? setSelectAddTag('')
-          : setSelectAddTag(data.item);
-      }}
-      select={selectAddTag == data.item}>
-      <Text h4># {data.item}</Text>
-    </TextList>
+    <>
+      {data.index !== 0 && <Divider />}
+      <TextList
+        key={data.index}
+        onPress={() => {
+          selectAddTag == data.item
+            ? setSelectAddTag('')
+            : setSelectAddTag(data.item);
+        }}
+        select={selectAddTag == data.item}>
+        <Text h4># {data.item}</Text>
+      </TextList>
+    </>
   );
 };
 

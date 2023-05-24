@@ -6,7 +6,10 @@ import {useRecoilState} from 'recoil';
 import {AppColor} from '../../utils/GlobalStyles';
 import useSearch from '../../hook/useSearch';
 
-export const SearchBar = ({backgroundColor = AppColor.primary}) => {
+export const SearchBar = ({
+  containerColor = AppColor.primary,
+  inputColor = AppColor.white,
+}) => {
   const navigation = useNavigation();
   const [queryState, setQueryState] = useRecoilState(QueryState);
   const searchTag = useSearch();
@@ -22,11 +25,12 @@ export const SearchBar = ({backgroundColor = AppColor.primary}) => {
       }}
       platform="ios"
       inputContainerStyle={{
-        backgroundColor: AppColor.primary,
+        backgroundColor: inputColor,
+        elevation: 3,
       }}
-      containerStyle={{backgroundColor: backgroundColor}}
+      containerStyle={{backgroundColor: containerColor}}
       cancelButtonTitle={'취소'}
-      cancelButtonProps={{color: AppColor.secondary, paddingRight: 10}}
+      cancelButtonProps={{color: AppColor.secondary, paddingRight: 8}}
     />
   );
 };

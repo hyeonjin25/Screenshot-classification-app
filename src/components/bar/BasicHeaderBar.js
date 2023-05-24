@@ -20,7 +20,11 @@ const BasicHeaderBar = ({rightOnPress, rightIcon, title, backgroundColor}) => {
           text: title,
           style: {color: 'black', fontSize: 20, fontWeight: 600},
         }}
-        containerStyle={{paddingBottom: 15}}
+        containerStyle={{
+          paddingBottom: 15,
+          elevation: 3,
+          borderRadius: 15,
+        }}
       />
     </>
   );

@@ -73,7 +73,7 @@ const ImageDetailScreen = props => {
         <HeaderBar>
           <Header
             leftComponent={<BackBar color={'white'} />}
-            backgroundColor="rgba(0,0,0,0.4)"
+            backgroundColor="rgba(100,100,100,0.5)"
           />
         </HeaderBar>
       )}
@@ -123,6 +123,7 @@ const ImageDetailScreen = props => {
           padding: 20,
           justifyContent: 'space-around',
           borderRadius: 10,
+          elevation: 3,
         }}>
         <Input
           placeholder="태그 입력"
@@ -167,7 +168,7 @@ const TagBox = styled.View`
   z-index: 1;
   padding: 5%;
   padding-bottom: 2%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(100, 100, 100, 0.5);
 `;
 
 const ButtonBox = styled.View`
@@ -202,7 +203,8 @@ const Tags = ({tags, deleteTag, isDelete}) => {
             onPress={() => deleteTag(tag.first)}
             iconRight
             containerStyle={{margin: 5}}
-            buttonStyle={{backgroundColor: AppColor.secondary}}
+            buttonStyle={{backgroundColor: AppColor.secondary, elevation: 1}}
+            titleStyle={{fontWeight: 'bold'}}
           />
         ))}
       </TagsGroup>
