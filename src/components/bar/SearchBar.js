@@ -27,8 +27,10 @@ export const SearchBar = ({
       inputContainerStyle={{
         backgroundColor: inputColor,
         elevation: 3,
+        padding: 2,
+        borderRadius: 15,
       }}
-      containerStyle={{backgroundColor: containerColor}}
+      containerStyle={{backgroundColor: containerColor, marginTop: 10}}
       cancelButtonTitle={'취소'}
       cancelButtonProps={{color: AppColor.secondary, paddingRight: 8}}
     />

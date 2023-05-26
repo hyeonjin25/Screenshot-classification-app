@@ -16,7 +16,7 @@ export const FavoriteTagState = atom({
 
 // 전체 태그
 export const AllTagState = atom({
-  key: 'allTag=',
+  key: 'allTag',
   default: [],
   effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 });
@@ -31,6 +31,12 @@ export const ImageListState = atom({
 export const TagListState = atom({
   key: 'tagList',
   default: [],
+});
+
+// 로딩 상태
+export const LoadingState = atom({
+  key: 'loading',
+  default: false,
 });
 
 // 즐겨찾기 되지 않은 태그들

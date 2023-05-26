@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {Divider, ListItem, Text} from '@rneui/themed';
 import useSearch from '../../hook/useSearch';
-import {Button} from '@rneui/base';
+import {Icon} from '@rneui/base';
 import customAxios from '../../api/axios';
 import {FlatList} from 'react-native-gesture-handler';
 import {AppColor} from '../../utils/GlobalStyles';
@@ -27,6 +27,7 @@ export const TagList = ({tags, isDelete}) => {
               />
             );
           }}
+          showsVerticalScrollIndicator={false}
         />
       </Container>
     );
@@ -44,8 +45,10 @@ const Container = styled.View`
 `;
 
 const TagBox = styled.View`
+  flex: 1;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   padding: 2%;
 `;
 
@@ -79,14 +82,11 @@ const List = ({data, isDelete, index, searchTag}) => {
           </ListItem.Title>
         </ListItem.Content>
         {isDelete ? (
-          <Button
-            title="삭제"
+          <Icon
+            name="close"
+            type="MaterialCommunityIcons"
+            color={AppColor.secondary}
             onPress={() => onDelete(data)}
-            icon={{name: 'delete', color: 'white'}}
-            buttonStyle={{
-              backgroundColor: AppColor.secondary,
-              paddingRight: 18,
-            }}
           />
         ) : (
           <ListItem.Chevron />

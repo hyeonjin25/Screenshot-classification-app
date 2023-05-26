@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import {FlatList, Image} from 'react-native';
 import {windowWidth} from '../../utils/GlobalStyles';
@@ -47,8 +47,6 @@ const TextBox = styled.View`
 `;
 
 const List = ({data, navigation}) => {
-  console.log(data);
-
   return (
     <ImageBox
       onPress={() => {

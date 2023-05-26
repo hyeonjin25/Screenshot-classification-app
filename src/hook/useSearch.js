@@ -1,9 +1,15 @@
+import {useEffect} from 'react';
 import {useRecoilState} from 'recoil';
 import customAxios from '../api/axios';
-import {ImageListState} from '../state/RecoilState';
+import {ImageListState, LoadingState} from '../state/RecoilState';
 
 const useSearch = () => {
   const [imageListState, setImageListState] = useRecoilState(ImageListState);
+  const [loadingState, setLoadingState] = useRecoilState(LoadingState);
+
+  useEffect(() => {
+    setLoadingState(true);
+  }, []);
 
   // 태그 검색
   const searchTag = tag => {
@@ -12,9 +18,10 @@ const useSearch = () => {
       .then(res => {
         console.log('태그검색완료: ', res.data.data);
         setImageListState(res.data.data);
+        setLoadingState(false);
       })
       .catch(err => {
-        console.log(err);
+        console.log('에로', err);
       });
   };
 

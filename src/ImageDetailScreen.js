@@ -73,7 +73,7 @@ const ImageDetailScreen = props => {
         <HeaderBar>
           <Header
             leftComponent={<BackBar color={'white'} />}
-            backgroundColor="rgba(100,100,100,0.5)"
+            backgroundColor="rgba(50,50,50,0.5)"
           />
         </HeaderBar>
       )}
@@ -103,7 +103,11 @@ const ImageDetailScreen = props => {
                 태그 삭제
               </Text>
             </AddButton>
-            <AddButton onPress={() => setVisible(true)}>
+            <AddButton
+              onPress={() => {
+                setVisible(true);
+                setNewTag('');
+              }}>
               <Icon type="entypo" name="plus" color="white" />
               <Text style={{color: 'white', fontWeight: 'bold'}}>
                 태그 추가
@@ -168,7 +172,7 @@ const TagBox = styled.View`
   z-index: 1;
   padding: 5%;
   padding-bottom: 2%;
-  background: rgba(100, 100, 100, 0.5);
+  background: rgba(50, 50, 50, 0.5);
 `;
 
 const ButtonBox = styled.View`
