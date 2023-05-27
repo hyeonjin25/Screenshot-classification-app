@@ -179,7 +179,7 @@ function App() {
       });
   };
 
-  if (loadingState) return <LoadingBar />;
+  if (loadingState) return <LoadingBar title={'이미지 태깅 중입니다...'} />;
 
   return (
     <RecoilRoot>

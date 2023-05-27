@@ -3,7 +3,7 @@ import {Button} from '@rneui/base';
 import styled from 'styled-components';
 import {AppColor} from '../../utils/GlobalStyles';
 
-const LoadingBar = () => {
+const LoadingBar = ({title}) => {
   return (
     <Container>
       <Button
@@ -14,7 +14,7 @@ const LoadingBar = () => {
         }}
         buttonStyle={{backgroundColor: AppColor.white}}
       />
-      <Message>이미지 태깅 중입니다...</Message>
+      <Message>{title}</Message>
     </Container>
   );
 };
