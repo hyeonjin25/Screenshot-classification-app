@@ -7,20 +7,21 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {BASE_URL} from './src/config/api';
-import {StackNavigator} from './src/navigator/StackNavigator';
-import messaging from '@react-native-firebase/messaging';
-import {RecoilRoot, useRecoilState, useSetRecoilState} from 'recoil';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import customAxios from './src/api/axios';
 import {Alert, Platform} from 'react-native';
 import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {RecoilRoot, useRecoilState} from 'recoil';
+import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import styled from 'styled-components';
+
+import {StackNavigator} from './src/navigator/StackNavigator';
+import customAxios from './src/api/axios';
 import {LoadingState} from './src/state/RecoilState';
-import useSearch from './src/hook/useSearch';
+import {AppColor} from './src/utils/GlobalStyles';
+import LoadingBar from './src/components/bar/LoadingBar';
 
 function App() {
   const RNFS = require('react-native-fs');
-  const searchTag = useSearch();
 
   const [loadingState, setLoadingState] = useRecoilState(LoadingState);
 
@@ -132,7 +133,7 @@ function App() {
       })
       .then(contents => {
         // log the file contents
-        console.log('file contents :',contents);
+        console.log('file contents :', contents);
       })
       .catch(err => {
         console.log(
@@ -167,7 +168,7 @@ function App() {
     };
 
     customAxios
-      .post('/images2', formData, config)
+      .post('/images', formData, config)
       .then(data => {
         console.log('MY LOGGG : /images SEND IMAGES SUCCESS : ', data);
         setLoadingState(false);
@@ -176,9 +177,9 @@ function App() {
         console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err);
         setLoadingState(false);
       });
-
-    searchTag();
   };
+
+  if (loadingState) return <LoadingBar />;
 
   return (
     <RecoilRoot>
