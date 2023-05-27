@@ -9,8 +9,6 @@ import {
   FavoriteTagState,
   NoFavoriteTagsState,
   QueryState,
-  TopAllTagsState,
-  TopFavoriteTagsState,
 } from './state/RecoilState';
 import {AppColor, windowHeight, windowWidth} from './utils/GlobalStyles';
 import {Divider, Icon, Overlay, Text} from '@rneui/themed';
@@ -29,8 +27,6 @@ const HomeScreen = () => {
   const [selectAddTag, setSelectAddTag] = useState('');
   const setQueryState = useSetRecoilState(QueryState);
 
-  const topFavoriteTagState = useRecoilValue(TopFavoriteTagsState);
-  const topAllTagState = useRecoilValue(TopAllTagsState);
   const [favoriteTagState, setFavoriteTagState] =
     useRecoilState(FavoriteTagState);
   const [allTagState, setAllTagState] = useRecoilState(AllTagState);
@@ -104,7 +100,7 @@ const HomeScreen = () => {
               전체보기
             </Text>
           </TitleBox>
-          <TagList tags={topFavoriteTagState} />
+          <TagList tags={favoriteTagState.slice(0, 5)} />
         </WhiteBox>
 
         <DivideBox height={30} />
@@ -124,7 +120,7 @@ const HomeScreen = () => {
               전체보기
             </Text>
           </TitleBox>
-          <TagList tags={topAllTagState} />
+          <TagList tags={allTagState.slice(0, 5)} />
         </WhiteBox>
 
         <DivideBox height={20} />
@@ -136,24 +132,30 @@ const HomeScreen = () => {
         onBackdropPress={() => setVisible(false)}
         overlayStyle={{
           backgroundColor: AppColor.white,
-          width: windowWidth * 0.7,
-          maxHeight: windowHeight * 0.4,
+          width: Math.round(windowWidth * 0.7),
+          maxHeight: Math.round(windowHeight * 0.4),
           padding: 30,
           justifyContent: 'space-around',
           borderRadius: 15,
           elevation: 3,
         }}>
-        <FlatList
-          data={noFavoriteTagState}
-          renderItem={item => (
-            <ChoiceTags
-              data={item}
-              setSelectAddTag={setSelectAddTag}
-              selectAddTag={selectAddTag}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-        />
+        {noFavoriteTagState.length === 0 ? (
+          <NoTag>
+            <Text style={{color: '#D3D3D3'}}>태그가 존재하지 않습니다.</Text>
+          </NoTag>
+        ) : (
+          <FlatList
+            data={noFavoriteTagState}
+            renderItem={item => (
+              <ChoiceTags
+                data={item}
+                setSelectAddTag={setSelectAddTag}
+                selectAddTag={selectAddTag}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
 
         <ButtonBox>
           <Button
@@ -185,8 +187,6 @@ const WhiteBox = styled.View`
 `;
 
 export const Container = styled.View`
-  /* flex: 1; */
-  /* padding-top: 2%; */
   padding: 0 3.3%;
 `;
 
@@ -217,6 +217,11 @@ export const Row = styled.View`
 
 const IconBox = styled.TouchableOpacity`
   padding: 5px;
+`;
+
+const NoTag = styled.View`
+  align-items: center;
+  justify-content: center;
 `;
 
 const ButtonBox = styled.View`

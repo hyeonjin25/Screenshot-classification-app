@@ -48,21 +48,3 @@ export const NoFavoriteTagsState = selector({
     return allTag.filter(tag => !favoriteTag.includes(tag));
   },
 });
-
-// 홈화면에 표시 될 즐겨찾기 태그들
-export const TopFavoriteTagsState = selector({
-  key: 'topFavoriteTags',
-  get: ({get}) => {
-    const favoriteTag = get(FavoriteTagState);
-    return favoriteTag.slice(0, 5);
-  },
-});
-
-// 홈화면에 표시 될 전체 태그들
-export const TopAllTagsState = selector({
-  key: 'topAllTags',
-  get: ({get}) => {
-    const allTag = get(AllTagState);
-    return allTag.slice(0, 5);
-  },
-});
