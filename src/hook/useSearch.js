@@ -16,7 +16,7 @@ const useSearch = () => {
     customAxios
       .get(`/search?tags=${tag}`)
       .then(res => {
-        console.log('태그검색완료: ', res.data.data);
+        console.log('MY LOGGG : TAG SEARCH SUCCESS', res.data.data);
         setImageListState(res.data.data);
         setLoadingState(false);
       })

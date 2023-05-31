@@ -1,4 +1,4 @@
-import { useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import customAxios from '../api/axios';
 import {AllTagState} from '../state/RecoilState';
 
@@ -10,6 +10,7 @@ const useAllTags = () => {
     customAxios
       .get(`/tags`)
       .then(res => {
+        console.log('MY LOGGG : allTag!!!!!!!!!!!!!!!!!!: ', res);
         setAllTagState(res.data.data);
       })
       .catch(err => {
