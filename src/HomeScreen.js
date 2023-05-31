@@ -15,7 +15,7 @@ import {Divider, Icon, Overlay, Text} from '@rneui/themed';
 import customAxios from './api/axios';
 import {Button} from '@rneui/base';
 import {FlatList} from 'react-native-gesture-handler';
-import useFavorite from './hook/useFavorite';
+import useFavorite from './hook/useFavoriteTags';
 import useAllTags from './hook/useAllTags';
 
 const HomeScreen = () => {

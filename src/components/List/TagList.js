@@ -7,7 +7,7 @@ import {Icon} from '@rneui/base';
 import customAxios from '../../api/axios';
 import {FlatList} from 'react-native-gesture-handler';
 import {AppColor} from '../../utils/GlobalStyles';
-import useFavorite from '../../hook/useFavorite';
+import useFavorite from '../../hook/useFavoriteTags';
 
 export const TagList = ({tags, isDelete}) => {
   const searchTag = useSearch();

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import {useRecoilValue} from 'recoil';
 import {AllTagState, FavoriteTagState} from './state/RecoilState';
 import {useFocusEffect} from '@react-navigation/native';
-import useFavorite from './hook/useFavorite';
+import useFavorite from './hook/useFavoriteTags';
 import useAllTags from './hook/useAllTags';
 
 const TagsScreen = props => {
