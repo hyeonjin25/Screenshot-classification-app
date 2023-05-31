@@ -36,7 +36,7 @@ export const TagListState = atom({
 // 로딩 상태
 export const LoadingState = atom({
   key: 'loading',
-  default: false,
+  default: 0, // 0: 로딩 전, 1: 사진 가져오는 중, 2: 서버에 전송하는 중, 3: 서버에 전송 완료, 4: 서버에 전송 실패
 });
 
 // 즐겨찾기 되지 않은 태그들

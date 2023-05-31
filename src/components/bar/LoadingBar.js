@@ -19,14 +19,14 @@ const LoadingBar = ({title}) => {
   );
 };
 
-const Container = styled.View`
+export const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
   background-color: ${AppColor.white};
 `;
 
-const Message = styled.Text`
+export const Message = styled.Text`
   font-size: 20px;
   color: ${AppColor.secondary};
 `;

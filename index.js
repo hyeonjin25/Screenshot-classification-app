@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import {AppRegistry} from 'react-native';
+import {Alert, AppRegistry} from 'react-native';
 import {name as appName} from './app.json';
 import App from './App';
 import {RecoilRoot} from 'recoil';
@@ -14,6 +14,7 @@ import {theme} from './src/utils/GlobalStyles';
 import {ThemeProvider} from '@rneui/themed';
 
 export default function Main() {
+
   return (
     <RecoilRoot>
       <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>

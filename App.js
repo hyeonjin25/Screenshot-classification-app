@@ -6,29 +6,25 @@
  */
 
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Alert, Platform} from 'react-native';
 import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
-import {RecoilRoot, useRecoilState} from 'recoil';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styled from 'styled-components';
 
 import {StackNavigator} from './src/navigator/StackNavigator';
 import customAxios from './src/api/axios';
-import {LoadingState} from './src/state/RecoilState';
-import {AppColor} from './src/utils/GlobalStyles';
 import LoadingBar from './src/components/bar/LoadingBar';
+import ReloadBar from './src/components/bar/ReloadBar';
 
 function App() {
   const RNFS = require('react-native-fs');
 
-  const [loadingState, setLoadingState] = useRecoilState(LoadingState);
+  const [dataLoadState, setDataLoadState] = useState(1);
 
   React.useEffect(() => {
     getFCMToken();
     getStoragePermission();
-    setLoadingState(true);
   }, []);
 
   // fcm token 가져와서 storage에 저장
@@ -46,6 +42,7 @@ function App() {
         console.log(err, 'fcmtoken에서 error 발생');
       }
     }
+    return fcmToken;
   };
 
   const getStoragePermission = () => {
@@ -118,7 +115,6 @@ function App() {
     // 캡쳐사진 읽기
     RNFS.readDir(RNFS.ExternalStorageDirectoryPath + '/DCIM/Screenshots')
       .then(result => {
-        console.log('MY LOGGG GET SCREENSHOT IMAGE : ', result);
         sendImages(result);
         return result.map(res => [RNFS.stat(res), res]);
       })
@@ -145,13 +141,12 @@ function App() {
   };
 
   // 캡쳐사진 서버에 전송
-  const sendImages = images => {
+  const sendImages = async images => {
     const formData = new FormData();
     console.log('MY LOGGG GET IMAGES FOR SEND : ', images);
 
     try {
       images?.map(image => {
-        console.log('MY LOGGG IMAGE PATH : ', image.path);
         formData.append('images', {
           uri: 'file://' + image.path,
           name: image.name,
@@ -161,32 +156,55 @@ function App() {
     } catch (err) {
       console.log('MY LOGGG FORM DATA ERROR : ', err);
     }
+    const fcmToken = await getFCMToken();
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
+        userDeviceToken: fcmToken,
       },
     };
 
+    setDataLoadState(2);
     customAxios
       .post('/images', formData, config)
       .then(data => {
         console.log('MY LOGGG : /images SEND IMAGES SUCCESS : ', data);
-        setLoadingState(false);
+        setDataLoadState(3);
       })
       .catch(err => {
-        console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err);
-        setLoadingState(false);
+        console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err, err.config);
+        setDataLoadState(4);
       });
   };
 
-  if (loadingState) return <LoadingBar title={'이미지 태깅 중입니다...'} />;
+  console.log('loadingState : ', dataLoadState);
+
+  if (dataLoadState == 1 || dataLoadState == 2)
+    return (
+      <LoadingBar
+        title={
+          dataLoadState == 1
+            ? '사진을 불러오는 중입니다...'
+            : '태그를 생성하는 중입니다...'
+        }
+      />
+    );
+  else if (dataLoadState == 4) {
+    return (
+      <ReloadBar
+        title={'이미지 태깅에 실패했습니다'}
+        onPress={() => {
+          readImages();
+          setDataLoadState(1);
+        }}
+      />
+    );
+  }
 
   return (
-    <RecoilRoot>
-      <NavigationContainer>
-        <StackNavigator />
-      </NavigationContainer>
-    </RecoilRoot>
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
   );
 }
 
