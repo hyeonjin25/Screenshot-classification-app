@@ -35,7 +35,7 @@ export const TagList = ({tags, isDelete}) => {
 
   return (
     <TagBox>
-      <Text style={{color: 'lightGray'}}>태그가 존재하지 않습니다.</Text>
+      <Text style={{color: AppColor.gray}}>태그가 존재하지 않습니다.</Text>
     </TagBox>
   );
 };
@@ -45,7 +45,6 @@ const Container = styled.View`
 `;
 
 const TagBox = styled.View`
-  flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: center;

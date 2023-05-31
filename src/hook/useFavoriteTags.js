@@ -1,8 +1,8 @@
-import { useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import customAxios from '../api/axios';
 import {FavoriteTagState} from '../state/RecoilState';
 
-const useFavorite = () => {
+const useFavoriteTags = () => {
   const setFavoriteTagState = useSetRecoilState(FavoriteTagState);
 
   // 즐겨찾는 태그 조회
@@ -19,4 +19,4 @@ const useFavorite = () => {
   return FavoriteTag;
 };
 
-export default useFavorite;
+export default useFavoriteTags;
