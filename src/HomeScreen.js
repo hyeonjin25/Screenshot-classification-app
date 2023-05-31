@@ -32,6 +32,9 @@ const HomeScreen = () => {
   const [allTagState, setAllTagState] = useRecoilState(AllTagState);
   const noFavoriteTagState = useRecoilValue(NoFavoriteTagsState);
 
+  console.log('MY LOGGG : favoriteTagState: ', favoriteTagState);
+  console.log('MY LOGGG : allTagState: ', allTagState);
+
   useFocusEffect(
     useCallback(() => {
       setQueryState('');
@@ -42,7 +45,7 @@ const HomeScreen = () => {
     getTags();
   }, []);
 
-  const getTags = async () => {
+  const getTags = () => {
     // 즐겨찾는 태그 조회
     favoriteTag();
 

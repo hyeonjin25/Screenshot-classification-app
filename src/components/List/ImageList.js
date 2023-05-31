@@ -34,7 +34,7 @@ export const ImageList = () => {
 };
 
 const Container = styled.View`
-  width: ${windowWidth * 0.96};
+  width: ${Math.round(windowWidth * 0.96)};
   margin: 0 auto;
   margin-top: 10px;
 `;
@@ -59,8 +59,8 @@ const List = ({data, navigation}) => {
       <Image
         source={{uri: data.imageUrl}}
         style={{
-          width: windowWidth * 0.32 - 10,
-          height: windowWidth * 0.32 - 10,
+          width: Math.round(windowWidth * 0.32) - 10,
+          height: Math.round(windowWidth * 0.32) - 10,
         }}
         resizeMode="cover"
       />

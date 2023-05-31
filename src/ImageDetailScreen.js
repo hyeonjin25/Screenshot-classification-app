@@ -123,7 +123,7 @@ const ImageDetailScreen = props => {
         onBackdropPress={() => setVisible(false)}
         overlayStyle={{
           backgroundColor: AppColor.white,
-          width: windowWidth * 0.7,
+          width: Math.round(windowWidth * 0.7),
           padding: 20,
           justifyContent: 'space-around',
           borderRadius: 10,
@@ -194,6 +194,7 @@ const Tags = ({tags, deleteTag, isDelete}) => {
       <TagsGroup>
         {tags.map((tag, index) => (
           <Chip
+            key={index}
             index={index}
             title={`# ${tag.second}`}
             icon={
