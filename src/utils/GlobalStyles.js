@@ -19,7 +19,7 @@ export const AppColor = {
   secondary: '#379CFF',
   white: '#F9F7F7',
   dark: '#112D4E',
-  gray: 'gray',
+  gray: '#D3D3D3',
   body: '#F0F0F0',
 };
 
