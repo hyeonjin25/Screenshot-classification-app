@@ -15,6 +15,7 @@ import customAxios from './src/api/axios';
 import LoadingBar from './src/components/bar/LoadingBar';
 import ReloadBar from './src/components/bar/ReloadBar';
 import {useFCMToken} from './src/hook/useFCMToken';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App() {
   const RNFS = require('react-native-fs');
@@ -85,13 +86,14 @@ function App() {
     }
   };
 
-  const readImages = async() => {
+  const readImages = async () => {
     // 캡쳐사진 읽기
     try {
       const result = await RNFS.readDir(
         RNFS.ExternalStorageDirectoryPath + '/DCIM/Screenshots',
       );
-      sendImages(result);
+      const newImages = await checkSavedImages(result);
+      sendImages(result, newImages);
     } catch (err) {
       console.log(
         'MY LOGGG FAILED GET SCREENSHOT IMAGE : ',
@@ -101,12 +103,31 @@ function App() {
     }
   };
 
-  // 캡쳐사진 서버에 전송
-  const sendImages = async images => {
-    const formData = new FormData();
-    console.log('MY LOGGG GET IMAGES FOR SEND : ', images);
+  // 캡쳐사진 저장 여부 확인
+  const checkSavedImages = async images => {
+    const imageArr = await AsyncStorage.getItem('imageArr');
+    const savedImageSet = new Set(JSON.parse(imageArr));
 
-    images?.map(image => {
+    console.log('old', savedImageSet);
+    console.time('checkImages');
+    const newImages = new Array();
+    images.forEach(image => {
+      console.log(savedImageSet.has(image.name));
+      if (!savedImageSet.has(image.name)) {
+        newImages.push(image);
+      }
+    });
+    console.timeEnd('checkImages');
+
+    return newImages;
+  };
+
+  // 캡쳐사진 서버에 전송
+  const sendImages = async (allImages, newImages) => {
+    const formData = new FormData();
+    console.log('MY LOGGG GET IMAGES FOR SEND : ', allImages);
+
+    newImages?.forEach(image => {
       formData.append('images', {
         uri: 'file://' + image.path,
         name: image.name,
@@ -129,11 +150,22 @@ function App() {
       .then(data => {
         console.log('MY LOGGG : /images SEND IMAGES SUCCESS : ', data);
         setDataLoadState(3);
+        saveImages(allImages);
       })
       .catch(err => {
         console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err, err.config);
         setDataLoadState(4);
       });
+  };
+
+  // 전송한 캡쳐사진 저장
+  const saveImages = async images => {
+    let savedImages = new Array();
+    console.log('save!', images);
+    images.forEach(image => {
+      savedImages.push(image.name);
+    });
+    await AsyncStorage.setItem('imageArr', JSON.stringify(savedImages));
   };
 
   const dataLoadMessage = {
