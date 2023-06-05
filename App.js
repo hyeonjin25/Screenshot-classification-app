@@ -7,133 +7,62 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Alert, Platform} from 'react-native';
-import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 import {StackNavigator} from './src/navigator/StackNavigator';
 import customAxios from './src/api/axios';
 import LoadingBar from './src/components/bar/LoadingBar';
 import ReloadBar from './src/components/bar/ReloadBar';
 import {useFCMToken} from './src/hook/useFCMToken';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getStoragePermission} from './src/components/appLoad/getPermissions';
+import {
+  checkNewImages,
+  getFormData,
+  readImages,
+  saveImages,
+  sliceImageList,
+} from './src/components/appLoad/getImages';
 
 function App() {
-  const RNFS = require('react-native-fs');
   const fcmToken = useFCMToken();
 
+  const dataLoadMessage = {
+    1: '사진을 불러오는 중입니다...',
+    2: '태그를 생성하는 중입니다...',
+    3: '태그 생성이 완료되었습니다.',
+    4: '이미지 태깅에 실패했습니다.',
+  };
+
   const [dataLoadState, setDataLoadState] = useState(1);
+  const [imageListNum, setImageListNum] = useState(0); // 전송할 이미지 리스트 개수
+  const [sendImageListNum, setSendImageListNum] = useState(0); // 전송한 이미지 리스트 개수
 
   React.useEffect(() => {
-    getStoragePermission();
+    const getPermissionAndSendImages = async () => {
+      const permission = await getStoragePermission();
+      if (!permission) {
+        setDataLoadState(4);
+        return;
+      }
+
+      const allImages = await readImages(); // 기기의 모든 캡쳐사진 가져오기
+      const newImages = await checkNewImages(allImages); // 새로운 캡쳐사진만 가져오기
+      const sliceLists = await sliceImageList(allImages); // -> newImages 사진 배열 여러개로 나누기
+      setImageListNum(sliceLists.length);
+      sendImageLists(sliceLists);
+    };
+    getPermissionAndSendImages();
   }, []);
 
-  const permissionVerVersion =
-    Platform.Version >= 33
-      ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-      : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
-
-  const getStoragePermission = async () => {
-    // 앨범 접근 권한 요청
-    try {
-      if (Platform.OS === 'android') {
-        const result = await check(permissionVerVersion);
-        handlePermission(result);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handlePermission = result => {
-    switch (result) {
-      case RESULTS.GRANTED:
-        readImages();
-        break;
-      case RESULTS.UNAVAILABLE:
-        Confirm('알림', '해당 기기는 앨범에 접근할 수 있는 기기가 아닙니다.');
-        break;
-      case RESULTS.DENIED:
-        requestPermission();
-        break;
-      case RESULTS.BLOCKED:
-        Alert.alert(
-          '',
-          '이미지태거에서 기기의 사진에 액세스할 수 있도록 앱 설정 화면에서 권한을 허용해주세요.',
-          [
-            {
-              text: '거부',
-              onPress: () => console.log('앨범 접근 권한 허용 거부됨'),
-            },
-            {
-              text: '허용',
-              onPress: () => Linking.openSettings(),
-            },
-          ],
-        );
-        break;
-    }
-  };
-
-  const requestPermission = async () => {
-    try {
-      await request(permissionVerVersion);
-      readImages();
-    } catch {
-      Confirm(
-        '알림',
-        '앨범 접근 권한 허용 중 에러가 발생했습니다. 앱 설정 화면에서 권한을 허용해 주세요.',
-      );
-    }
-  };
-
-  const readImages = async () => {
-    // 캡쳐사진 읽기
-    try {
-      const result = await RNFS.readDir(
-        RNFS.ExternalStorageDirectoryPath + '/DCIM/Screenshots',
-      );
-      const newImages = await checkSavedImages(result);
-      sendImages(result, newImages);
-    } catch (err) {
-      console.log(
-        'MY LOGGG FAILED GET SCREENSHOT IMAGE : ',
-        err.message,
-        err.code,
-      );
-    }
-  };
-
-  // 캡쳐사진 저장 여부 확인
-  const checkSavedImages = async images => {
-    const imageArr = await AsyncStorage.getItem('imageArr');
-    const savedImageSet = new Set(JSON.parse(imageArr));
-
-    console.log('old', savedImageSet);
-    console.time('checkImages');
-    const newImages = new Array();
-    images.forEach(image => {
-      console.log(savedImageSet.has(image.name));
-      if (!savedImageSet.has(image.name)) {
-        newImages.push(image);
-      }
-    });
-    console.timeEnd('checkImages');
-
-    return newImages;
-  };
-
   // 캡쳐사진 서버에 전송
-  const sendImages = async (allImages, newImages) => {
-    const formData = new FormData();
-    console.log('MY LOGGG GET IMAGES FOR SEND : ', allImages);
-
-    newImages?.forEach(image => {
-      formData.append('images', {
-        uri: 'file://' + image.path,
-        name: image.name,
-        type: 'image/jpeg',
-      });
+  const sendImageLists = async sliceLists => {
+    // 50개씩 잘라서 전송
+    sliceLists.forEach(async newImages => {
+      sendImages(newImages);
     });
+  };
+
+  const sendImages = async newImages => {
+    const formData = getFormData(newImages);
 
     const config = {
       headers: {
@@ -149,30 +78,16 @@ function App() {
       .post('/images', formData, config)
       .then(data => {
         console.log('MY LOGGG : /images SEND IMAGES SUCCESS : ', data);
-        setDataLoadState(3);
-        saveImages(allImages);
+        if (imageListNum == sendImageListNum + 1) {
+          setDataLoadState(3);
+          saveImages(newImages); // 전송한 캡쳐사진 저장
+        }
+        setSendImageListNum(sendImageListNum + 1);
       })
       .catch(err => {
         console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err, err.config);
         setDataLoadState(4);
       });
-  };
-
-  // 전송한 캡쳐사진 저장
-  const saveImages = async images => {
-    let savedImages = new Array();
-    console.log('save!', images);
-    images.forEach(image => {
-      savedImages.push(image.name);
-    });
-    await AsyncStorage.setItem('imageArr', JSON.stringify(savedImages));
-  };
-
-  const dataLoadMessage = {
-    1: '사진을 불러오는 중입니다...',
-    2: '태그를 생성하는 중입니다...',
-    3: '태그 생성이 완료되었습니다.',
-    4: '이미지 태깅에 실패했습니다.',
   };
 
   if (dataLoadState == 1 || dataLoadState == 2)
