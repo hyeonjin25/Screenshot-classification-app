@@ -10,7 +10,6 @@ const useAllTags = () => {
     customAxios
       .get(`/tags`)
       .then(res => {
-        console.log('MY LOGGG : allTag!!!!!!!!!!!!!!!!!!: ', res);
         setAllTagState(res.data.data);
       })
       .catch(err => {

@@ -32,8 +32,6 @@ const HomeScreen = () => {
   const [allTagState, setAllTagState] = useRecoilState(AllTagState);
   const noFavoriteTagState = useRecoilValue(NoFavoriteTagsState);
 
-  console.log('MY LOGGG : favoriteTagState: ', favoriteTagState);
-  console.log('MY LOGGG : allTagState: ', allTagState);
 
   useFocusEffect(
     useCallback(() => {
