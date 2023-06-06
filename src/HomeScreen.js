@@ -13,7 +13,7 @@ import {
 import {AppColor, windowHeight, windowWidth} from './utils/GlobalStyles';
 import {Divider, Icon, Overlay, Text} from '@rneui/themed';
 import customAxios from './api/axios';
-import {Button} from '@rneui/base';
+import {Button, Image} from '@rneui/base';
 import {FlatList} from 'react-native-gesture-handler';
 import useFavorite from './hook/useFavoriteTags';
 import useAllTags from './hook/useAllTags';
@@ -31,7 +31,6 @@ const HomeScreen = () => {
     useRecoilState(FavoriteTagState);
   const [allTagState, setAllTagState] = useRecoilState(AllTagState);
   const noFavoriteTagState = useRecoilValue(NoFavoriteTagsState);
-
 
   useFocusEffect(
     useCallback(() => {

@@ -33,8 +33,10 @@ function App() {
   };
 
   const [dataLoadState, setDataLoadState] = useState(1);
-  const [imageListNum, setImageListNum] = useState(0); // 전송할 이미지 리스트 개수
-  const [sendImageListNum, setSendImageListNum] = useState(0); // 전송한 이미지 리스트 개수
+  let imageListNum = 0; // 전송할 이미지 리스트 개수
+  let sendImageListNum = 0; // 전송한 이미지 리스트 개수
+  let allImages = []; // 기기의 모든 캡쳐사진
+  let newImages = []; // 기기의 새로운 캡쳐사진
 
   React.useEffect(() => {
     const getPermissionAndSendImages = async () => {
@@ -44,22 +46,24 @@ function App() {
         return;
       }
 
-      const allImages = await readImages(); // 기기의 모든 캡쳐사진 가져오기
-      const newImages = await checkNewImages(allImages); // 새로운 캡쳐사진만 가져오기
-      const sliceLists = await sliceImageList(allImages); // -> newImages 사진 배열 여러개로 나누기
-      setImageListNum(sliceLists.length);
-      sendImageLists(sliceLists);
+      allImages = await readImages(); // 기기의 모든 캡쳐사진 가져오기
+      newImages = await checkNewImages(allImages); // 새로운 캡쳐사진만 가져오기
+      if (newImages.length == 0) {
+        setDataLoadState(3);
+      }
+
+      console.log(newImages);
+      const sliceLists = sliceImageList(newImages); // -> newImages 사진 배열 여러개로 나누기
+      imageListNum = sliceLists.length;
+
+      // 50개씩 잘라서 서버에 전송
+      sliceLists.forEach(async newImages => {
+        sendImages(newImages);
+      });
     };
+
     getPermissionAndSendImages();
   }, []);
-
-  // 캡쳐사진 서버에 전송
-  const sendImageLists = async sliceLists => {
-    // 50개씩 잘라서 전송
-    sliceLists.forEach(async newImages => {
-      sendImages(newImages);
-    });
-  };
 
   const sendImages = async newImages => {
     const formData = getFormData(newImages);
@@ -79,10 +83,10 @@ function App() {
       .then(data => {
         console.log('MY LOGGG : /images SEND IMAGES SUCCESS : ', data);
         if (imageListNum == sendImageListNum + 1) {
+          saveImages(allImages); // 전송한 캡쳐사진 저장
           setDataLoadState(3);
-          saveImages(newImages); // 전송한 캡쳐사진 저장
         }
-        setSendImageListNum(sendImageListNum + 1);
+        sendImageListNum += 1;
       })
       .catch(err => {
         console.log('MY LOGGG : /images SEND IMAGES FAIL : ', err, err.config);

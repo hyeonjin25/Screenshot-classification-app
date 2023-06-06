@@ -23,20 +23,14 @@ export const checkNewImages = async images => {
   const imageArr = await AsyncStorage.getItem('imageArr');
   const savedImageSet = new Set(JSON.parse(imageArr));
 
-  // console.log('old', savedImageSet);
-  // console.time('checkImages');
-  // const newImages = new Array();
-  // images.forEach(image => {
-  //   console.log(savedImageSet.has(image.name));
-  //   if (!savedImageSet.has(image.name)) {
-  //     newImages.push(image);
-  //   }
-  // });
-  // console.timeEnd('checkImages');
+  const newImages = new Array();
+  images.forEach(image => {
+    if (!savedImageSet.has(image.name)) {
+      newImages.push(image);
+    }
+  });
 
-  // return newImages;
-
-  return images;
+  return newImages;
 };
 
 export const sliceImageList = images => {
@@ -46,6 +40,8 @@ export const sliceImageList = images => {
   for (i = 0; i < images.length; i += 50) {
     imageList.push(images.slice(i, i + 50));
   }
+
+  console.log(imageList);
 
   return imageList;
 };
@@ -66,14 +62,14 @@ export const getFormData = newImages => {
 };
 
 // 전송한 캡쳐사진 저장
-export const saveImages = async newImages => {
-  const savedImages = JSON.parse(await AsyncStorage.getItem('imageArr'));
+export const saveImages = async allImages => {
+  console.log('all : ', allImages);
 
-  newImages.forEach(image => {
-    savedImages.push(image.name);
+  let newImageArr = [];
+
+  allImages.forEach(image => {
+    newImageArr.push(image.name);
   });
 
-  console.log(savedImages);
-
-  await AsyncStorage.setItem('imageArr', JSON.stringify(savedImages));
+  await AsyncStorage.setItem('imageArr', JSON.stringify(newImageArr));
 };

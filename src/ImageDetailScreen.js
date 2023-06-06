@@ -11,13 +11,12 @@ import {useRecoilState} from 'recoil';
 import {TagListState} from './state/RecoilState';
 
 const ImageDetailScreen = props => {
-  console.log('dd', props.route.params);
   const [showHeader, setShowHeader] = useState(false); //사진 터치하면 헤더 보이도록
   const [visible, setVisible] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [newTag, setNewTag] = useState('');
   const [tagListState, setTagListState] = useRecoilState(TagListState); // 태그 리스트
-  console.log(tagListState);
+  console.log('url : ', props.route.params.imageUrl);
 
   useEffect(() => {
     getTags();
@@ -42,7 +41,6 @@ const ImageDetailScreen = props => {
     customAxios
       .post(`/image/${props.route.params.imageId}/tag/${newTag}`)
       .then(res => {
-        console.log(res);
         // 태그 동기화
         getTags();
       })
@@ -54,11 +52,10 @@ const ImageDetailScreen = props => {
   const deleteTag = tag => {
     setVisible(false);
 
-    // 사진에 태그 추가
+    // 태그 삭제
     customAxios
       .delete(`/image/tag/${tag}`)
       .then(res => {
-        console.log(res);
         // 태그 동기화
         getTags();
       })
@@ -82,6 +79,11 @@ const ImageDetailScreen = props => {
         onPress={() => {
           setShowHeader(!showHeader);
         }}>
+        {/* <Image
+          source={{
+            uri: 'file:///storage/emulated/0/DCIM/Screenshots/Screenshot_20230605-193349_Instagram.jpg',
+          }}
+        /> */}
         <Image source={{uri: props.route.params.imageUrl}} />
       </ImageBox>
 
