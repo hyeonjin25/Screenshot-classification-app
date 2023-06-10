@@ -16,7 +16,7 @@ import {useFCMToken} from './src/hook/useFCMToken';
 import {getStoragePermission} from './src/components/appLoad/getPermissions';
 import {
   checkNewImages,
-  getFormData,
+  getFormDataWithImageResize,
   readImages,
   saveImages,
   sliceImageList,
@@ -52,7 +52,6 @@ function App() {
         setDataLoadState(3);
       }
 
-      console.log(newImages);
       const sliceLists = sliceImageList(newImages); // -> newImages 사진 배열 여러개로 나누기
       imageListNum = sliceLists.length;
 
@@ -66,7 +65,7 @@ function App() {
   }, []);
 
   const sendImages = async newImages => {
-    const formData = getFormData(newImages);
+    const formData = getFormDataWithImageResize(newImages);
 
     const config = {
       headers: {

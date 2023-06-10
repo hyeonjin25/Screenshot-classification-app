@@ -47,17 +47,18 @@ const TextBox = styled.View`
 `;
 
 const List = ({data, navigation}) => {
+  console.log('이미지리스트', data);
   return (
     <ImageBox
       onPress={() => {
         navigation.navigate('ImageDetail', {
           imageId: data.imageId,
-          imageUrl: data.imageUrl,
+          imageUrl: data.fileName,
         });
       }}
       key={data.imageId}>
       <Image
-        source={{uri: data.imageUrl}}
+        source={{uri: data.fileName}}
         style={{
           width: Math.round(windowWidth * 0.32) - 10,
           height: Math.round(windowWidth * 0.32) - 10,
