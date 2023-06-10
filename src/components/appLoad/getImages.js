@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
+import {windowHeight, windowWidth} from '../../utils/GlobalStyles';
 
 export const readImages = async () => {
   const RNFS = require('react-native-fs');
@@ -46,15 +48,27 @@ export const sliceImageList = images => {
   return imageList;
 };
 
-export const getFormData = newImages => {
+export const getFormDataWithImageResize = newImages => {
   const formData = new FormData();
 
   // 50개씩 잘라서 전송
-  newImages?.forEach(image => {
+
+  newImages?.forEach(async image => {
+    const ResizedImage = await ImageResizer.createResizedImage(
+      image.path, // path
+      windowWidth, // width
+      windowHeight, // height
+      'WEBP', // CompressFormat
+      100, // quality(for JPEG)
+      0, // rotation
+      null, // outputPath (null일 경우 cache에 저장)
+    );
+
+    console.log(ResizedImage);
     formData.append('images', {
-      uri: 'file://' + image.path,
-      name: image.name,
-      type: 'image/jpeg',
+      uri: 'file://' + ResizedImage.path,
+      name: 'file://' + ResizedImage.path, //image.name 대신 다음에 프론트에서 사진에 접근할 수 있도록 uri로 대신 보냄
+      type: 'image/WEBP',
     });
   });
 
