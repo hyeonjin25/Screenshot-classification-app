@@ -23,7 +23,7 @@ import {
 } from './src/components/appLoad/getImages';
 
 function App() {
-  const fcmToken = useFCMToken();
+  const {token: fcmToken, isTokenReady} = useFCMToken();
 
   const dataLoadMessage = {
     1: '사진을 불러오는 중입니다...',
@@ -32,37 +32,38 @@ function App() {
     4: '이미지 태깅에 실패했습니다.',
   };
 
-  const [dataLoadState, setDataLoadState] = useState(1);
+  const [dataLoadState, setDataLoadState] = useState(0);
   let imageListNum = 0; // 전송할 이미지 리스트 개수
   let sendImageListNum = 0; // 전송한 이미지 리스트 개수
   let allImages = []; // 기기의 모든 캡쳐사진
   let newImages = []; // 기기의 새로운 캡쳐사진
 
+  const getPermissionAndSendImages = async () => {
+    const permission = await getStoragePermission();
+    if (!permission) {
+      setDataLoadState(4);
+      return;
+    }
+    setDataLoadState(1);
+
+    allImages = await readImages(); // 기기의 모든 캡쳐사진 가져오기
+    newImages = await checkNewImages(allImages); // 새로운 캡쳐사진만 가져오기
+    if (newImages.length == 0) {
+      setDataLoadState(3);
+    }
+
+    const sliceLists = sliceImageList(newImages); // -> newImages 사진 배열 여러개로 나누기
+    imageListNum = sliceLists.length;
+
+    // 50개씩 잘라서 서버에 전송
+    sliceLists.forEach(async newImages => {
+      sendImages(newImages);
+    });
+  };
+
   React.useEffect(() => {
-    const getPermissionAndSendImages = async () => {
-      const permission = await getStoragePermission();
-      if (!permission) {
-        setDataLoadState(4);
-        return;
-      }
-
-      allImages = await readImages(); // 기기의 모든 캡쳐사진 가져오기
-      newImages = await checkNewImages(allImages); // 새로운 캡쳐사진만 가져오기
-      if (newImages.length == 0) {
-        setDataLoadState(3);
-      }
-
-      const sliceLists = sliceImageList(newImages); // -> newImages 사진 배열 여러개로 나누기
-      imageListNum = sliceLists.length;
-
-      // 50개씩 잘라서 서버에 전송
-      sliceLists.forEach(async newImages => {
-        sendImages(newImages);
-      });
-    };
-
-    getPermissionAndSendImages();
-  }, []);
+    if (isTokenReady) getPermissionAndSendImages();
+  }, [isTokenReady]);
 
   const sendImages = async newImages => {
     const formData = getFormDataWithImageResize(newImages);
@@ -95,6 +96,12 @@ function App() {
 
   if (dataLoadState == 1 || dataLoadState == 2)
     return <LoadingBar title={dataLoadMessage[dataLoadState]} />;
+  else if (dataLoadState == 3)
+    return (
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    );
   else if (dataLoadState == 4) {
     return (
       <ReloadBar
@@ -106,12 +113,6 @@ function App() {
       />
     );
   }
-
-  return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
-  );
 }
 
 export default App;

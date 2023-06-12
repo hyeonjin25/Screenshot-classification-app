@@ -4,6 +4,7 @@ import messaging from '@react-native-firebase/messaging';
 
 export const useFCMToken = () => {
   const [token, setToken] = useState(null);
+  const [isTokenReady, setIsTokenReady] = useState(false);
 
   useEffect(() => {
     const getFCMToken = async () => {
@@ -13,6 +14,7 @@ export const useFCMToken = () => {
           fcmToken = await messaging().getToken();
           if (fcmToken) {
             await AsyncStorage.setItem('fcmToken', fcmToken);
+            setIsTokenReady(true)
           }
         } catch (err) {
           console.log(err, 'fcmtoken에서 error 발생');
@@ -24,5 +26,5 @@ export const useFCMToken = () => {
     getFCMToken();
   }, []);
 
-  return token;
+  return {token, isTokenReady};
 };
