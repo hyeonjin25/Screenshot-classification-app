@@ -208,8 +208,11 @@ const Tags = ({tags, deleteTag, isDelete}) => {
               }
             }
             onPress={() => deleteTag(tag.first)}
+            disabled={!isDelete}
             iconRight
             containerStyle={{margin: 5}}
+            disabledStyle={{backgroundColor: AppColor.secondary}}
+            disabledTitleStyle={{color: 'white'}}
             buttonStyle={{backgroundColor: AppColor.secondary, elevation: 1}}
             titleStyle={{fontWeight: 'bold'}}
           />
