@@ -4,11 +4,12 @@ import {Input} from '@rneui/themed';
 import {Button, Chip, Overlay} from '@rneui/base';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
-import {AppColor, windowWidth} from './utils/GlobalStyles';
+import {AppColor, windowHeight, windowWidth} from './utils/GlobalStyles';
 import {BackBar} from './components/bar/BasicHeaderBar';
 import customAxios from './api/axios';
 import {useRecoilState} from 'recoil';
 import {TagListState} from './state/RecoilState';
+import {KeyboardAvoidingView} from 'react-native';
 
 const ImageDetailScreen = props => {
   const [showHeader, setShowHeader] = useState(false); //사진 터치하면 헤더 보이도록
@@ -65,7 +66,7 @@ const ImageDetailScreen = props => {
   };
 
   return (
-    <>
+    <ScrollView>
       {showHeader && (
         <HeaderBar>
           <Header
@@ -79,11 +80,6 @@ const ImageDetailScreen = props => {
         onPress={() => {
           setShowHeader(!showHeader);
         }}>
-        {/* <Image
-          source={{
-            uri: 'file:///storage/emulated/0/DCIM/Screenshots/Screenshot_20230605-193349_Instagram.jpg',
-          }}
-        /> */}
         <Image source={{uri: props.route.params.imageUrl}} />
       </ImageBox>
 
@@ -131,21 +127,23 @@ const ImageDetailScreen = props => {
           borderRadius: 10,
           elevation: 3,
         }}>
-        <Input
-          placeholder="태그 입력"
-          value={newTag}
-          onChangeText={setNewTag}
-        />
-        <Button
-          title="추가"
-          buttonStyle={{
-            backgroundColor: AppColor.secondary,
-            borderRadius: 20,
-          }}
-          onPress={() => addTag()}
-        />
+        <KeyboardAvoidingView>
+          <Input
+            placeholder="태그 입력"
+            value={newTag}
+            onChangeText={setNewTag}
+          />
+          <Button
+            title="추가"
+            buttonStyle={{
+              backgroundColor: AppColor.secondary,
+              borderRadius: 20,
+            }}
+            onPress={() => addTag()}
+          />
+        </KeyboardAvoidingView>
       </Overlay>
-    </>
+    </ScrollView>
   );
 };
 
@@ -161,8 +159,8 @@ const ImageBox = styled.TouchableWithoutFeedback`
 
 const Image = styled.Image`
   margin: auto;
-  width: 100%;
-  height: 100%;
+  width: ${windowWidth}px;
+  height: ${windowHeight}px;
   /* aspect-ratio: ${props => props.aspectRatio || 0.8}; */
   resize-mode: contain;
 `;
